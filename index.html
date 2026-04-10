@@ -12,9 +12,11 @@
         <div class="main__game-window" id="messageWindow">
             <p>Введите число от 1 до 100</p>
         </div>
+        <div class="main__attempt-display" id="attemptsDisplay">Попыток: 0</div>
         <input type="text" id="userGuess" placeholder="Введите число">
-        <input type="button" value="Ввод" onclick="checkGuess()">
+        <input type="button" id="checkButton" value="Проверить" onclick="checkGuess()">
         <input type="button" value="Новая игра" onclick="startNewGame()">
+        <div class="main__history-massive" id="historyList"></div>
     </div>
 </body>
 </html>
