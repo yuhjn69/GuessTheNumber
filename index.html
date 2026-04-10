@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Угадай число</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="/script.js"></script>
+</head>
+<body>
+    <div class="main__container">
+        <div class="main__game-window" id="messageWindow">
+            <p>Введите число от 1 до 100</p>
+        </div>
+        <input type="text" id="userGuess" placeholder="Введите число">
+        <input type="button" value="Ввод" onclick="checkGuess()">
+        <input type="button" value="Новая игра" onclick="startNewGame()">
+    </div>
+</body>
+</html>
