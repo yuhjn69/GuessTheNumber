@@ -1,8 +1,11 @@
+'use strict';
 let secretNumber;
 let attempts;
 let history = [];
+let lastGuess = null;
 
 function startNewGame() {
+    lastGuess = null;
     secretNumber = Math.floor(Math.random() * 100) + 1;
     attempts = 0;
     document.getElementById('userGuess').value='';
@@ -41,6 +44,7 @@ function checkGuess() {
     updateAttemptsDisplay();
 
     let resultText = '';
+    let isWin = false;
 
     // Подсказки пользователю
     if (guess > secretNumber) {
@@ -54,11 +58,27 @@ function checkGuess() {
         resultText = `${guess} → ПОБЕДА!`;
         let button = document.getElementById("checkButton");
         button.disabled = true;
+        isWin = true;
     }
 
+    // hot-cold
+    if (!isWin) {
+        let currentDiff = Math.abs(secretNumber - guess);
+        if (lastGuess !== null) {
+            let previousDiff = Math.abs(secretNumber - lastGuess);
+
+            if (currentDiff < previousDiff) {
+                message = message + ' Горячее!';
+            } else if (currentDiff > previousDiff) {
+                message = message + ' Холоднее!';
+            } else {
+                message = message + ' То же число...';
+            }
+    }
+    lastGuess = guess;
+    }
     history.push(resultText);
     updateHistoryDisplay();
-
     updateMessage(message);
     clearAndFocusInput(inputField);
 }
