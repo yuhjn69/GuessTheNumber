@@ -4,6 +4,7 @@ let attempts;
 let history = [];
 let lastGuess = null;
 
+
 function startNewGame() {
     lastGuess = null;
     secretNumber = Math.floor(Math.random() * 100) + 1;
@@ -20,6 +21,8 @@ function startNewGame() {
     history = [];
     updateHistoryDisplay();
     updateAttemptsDisplay();
+
+    loadRecord();
 }
 
 function checkGuess() {
@@ -59,6 +62,7 @@ function checkGuess() {
         let button = document.getElementById("checkButton");
         button.disabled = true;
         isWin = true;
+        checkRecord();
     }
 
     // hot-cold
@@ -74,14 +78,40 @@ function checkGuess() {
             } else {
                 message = message + ' То же число...';
             }
-    }
+        }
     lastGuess = guess;
     }
+    
     history.push(resultText);
     updateHistoryDisplay();
     updateMessage(message);
     clearAndFocusInput(inputField);
 }
+
+
+function checkRecord() {
+    let currentRecord = localStorage.getItem('record');
+    
+    if (currentRecord === null || currentRecord === 'null') {
+        localStorage.setItem('record', attempts);
+    } else if (attempts < Number(currentRecord)) {
+        localStorage.setItem('record', attempts);
+    }
+    
+    loadRecord();
+}
+
+function loadRecord() {
+    let currentRecord = localStorage.getItem('record');
+    let recordElement = document.getElementById('recordDisplay');
+
+    if (currentRecord === null || currentRecord === 'null' || currentRecord === 'null') {
+        recordElement.innerText = 'Рекорд: нет';
+    } else {
+        recordElement.innerText = 'Рекорд: ' + currentRecord;
+    }
+}
+
 
 function updateHistoryDisplay() {
     let historyDiv = document.getElementById("historyList");
