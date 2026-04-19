@@ -1,10 +1,10 @@
 'use strict';
-let secretNumber;
-let attempts;
-let history = [];
-let lastGuess = null;
-
-
+(() => {
+    let secretNumber;
+    let attempts;
+    let history = [];
+    let lastGuess = null;
+    
 function startNewGame() {
     lastGuess = null;
     secretNumber = Math.floor(Math.random() * 100) + 1;
@@ -15,7 +15,7 @@ function startNewGame() {
     button.disabled = false;
 
     updateMessage("Загадано новое число от 1 до 100!");
-    // Отладка
+    // Debugging
     console.log("Загадано число:" + secretNumber);
 
     history = [];
@@ -30,7 +30,7 @@ function checkGuess() {
     let guess = parseInt(inputField.value);
     let message = "";
 
-    //проверка на число
+    // check for number
     if (isNaN(guess)) {
         updateMessage("Это не число! Введите цифры.")
         clearAndFocusInput(inputField);
@@ -49,7 +49,7 @@ function checkGuess() {
     let resultText = '';
     let isWin = false;
 
-    // Подсказки пользователю
+    // User Hints
     if (guess > secretNumber) {
         message = "Много! Бери меньше.";
         resultText = `${guess} → Много`;
@@ -76,7 +76,7 @@ function checkGuess() {
             } else if (currentDiff > previousDiff) {
                 message = message + ' Холоднее!';
             } else {
-                message = message + ' То же число...';
+                message = message + ' На том же расстоянии...';
             }
         }
     lastGuess = guess;
@@ -87,6 +87,33 @@ function checkGuess() {
     updateMessage(message);
     clearAndFocusInput(inputField);
 }
+
+// Cancel move
+function undoLastGuess() {
+    if (history.length === 0) {
+        updateMessage(" Нечего отменять!!!");
+        return;
+    }
+
+    history = history.slice(0, -1);
+
+    if (attempts > 0) {
+        attempts--;
+    }
+    
+    if (history.length > 0) {
+        let lastEntry = history[history.length - 1];
+        let numberPart = lastEntry.split(' ')[0];
+        lastGuess = parseInt(numberPart);
+    } else {
+        lastGuess = null;
+    }
+
+    updateHistoryDisplay();
+    updateAttemptsDisplay();
+    updateMessage('Последний ход отменён');
+}
+
 
 
 function checkRecord() {
@@ -105,7 +132,7 @@ function loadRecord() {
     let currentRecord = localStorage.getItem('record');
     let recordElement = document.getElementById('recordDisplay');
 
-    if (currentRecord === null || currentRecord === 'null' || currentRecord === 'null') {
+    if (!currentRecord || currentRecord === 'null') {
         recordElement.innerText = 'Рекорд: нет';
     } else {
         recordElement.innerText = 'Рекорд: ' + currentRecord;
@@ -139,4 +166,9 @@ function updateAttemptsDisplay() {
     document.getElementById("attemptsDisplay").innerText = `Попыток: ${attempts}`;
 }
 
-window.onload = startNewGame;
+window.startNewGame = startNewGame;
+window.checkGuess = checkGuess;
+window.undoLastGuess = undoLastGuess;
+
+document.addEventListener('DOMContentLoaded', startNewGame);
+})();
